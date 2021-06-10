@@ -1,4 +1,6 @@
 //写経元コード様: http://note.affi-sapo-sv.com/js-15puzzle-step1.php
+//MDN Canvas API: https://developer.mozilla.org/ja/docs/Web/API/Canvas_API
+//CanvasRenderingContext2D https://developer.mozilla.org/ja/docs/Web/API/CanvasRenderingContext2D
 //即時関数の中に書いたのは、グローバルを汚さないため。
 //インポート・エクスポートを使ったファイル分割は後で実装する。
 //参考: https://qiita.com/koeri3/items/314ac7b9b73fc8c80a2d, https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Statements/import
@@ -97,8 +99,55 @@
 			context.fillText(textString, x, y);
 			context.restore();
 			return this;
-		}
+		},
 
+		/**
+         * イメージデータの取得
+         * @param rect
+         * @returns {ImageData}
+         */
+		getImageData(rect) {
+			return this.getContext().getImageData(...rect);
+		},
+
+		/**
+         * イメージの描画
+         * @param image
+         * @param x
+         * @param y
+         * @returns {layerCtrl}
+         */
+		putImageData(image, x, y) {
+			this.getContext().putImageData(image, x, y);
+			return this;
+		},
+
+		/**
+         * キャンバス全面クリア
+         */
+		clear() {
+			const cvs = this.getContext().clearRect(...rect);
+			this.getContext().clearRect(0, 0, cvs.width, cvs.height);
+		},
+
+		 /**
+         * キャンバスクリア
+         * @param rect [ 左座標 , 上座標 , 幅 , 高さ ]
+         * @returns {layerCtrl}
+         */
+		clearRect(rect) {
+			this.getContext.clearRect(...rect);
+			return this;
+		},
+
+		/**
+         * キャンバスのサイズと表示サイズの比率
+         * @returns {number}
+         */
+		getScale() {
+			const canvas = this.getCanvas();
+			return canvas.clientWidth / canvas.width;
+		}
 
 	}
 })();
