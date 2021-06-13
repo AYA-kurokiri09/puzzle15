@@ -55,6 +55,7 @@
          	* キャンバスにスタイルをセット
          	* @param styleObj 例：{ widt: "100px" , height : "100px" }
          	*/
+			//TODO: styleObjのwidthを取得できるようにする
 			setStyle(styleObj) {
 				const canvas = this.getCanvas;
 				Object.keys(styleObj).forEach(e => canvas.style[e] = styleObj[e]);
@@ -197,5 +198,50 @@
 			return layer;
 		});
 	}
+
+	 /**
+     * 背景描画用オブジェクト
+     * @param layer
+	 */
+	const backGroundDrawFunc = function (layer) {
+		this.getLayer() = () => layer;
+
+		this.frame = null;// 外周 [ 始点x , 始点y , 幅 , 高さ ]
+		this.innerFrame = null;// 内周( パズルエリア )
+
+		this.frameColor = "burlywood"; // 外周色
+        this.frameLineColor = "dimgray"; // 外周の線色
+        this.bottomPlateColor ="tan"; // 底板の色
+	};
+	backGroundDrawFunc.prototype = {
+		/**
+         * 背景描画に必要な座標を計算
+         */
+		init() {
+			const {size, frameSize} = {...puzzleScreenInfo};
+			this.frame = [0, 0, size, size];
+			this.innerFrame = [frameSize, frameSize, size-frameSize*2, size-frameSize*2];
+			return this;
+		},
+
+		/**
+         * init()で計算した情報をもとに背景を描画
+         * @param context
+		*/
+		draw() {
+			this.getLayer().clearRect(this.frame)
+				.rect(this.frame, this.frameColor, null)
+				.rect(this.innerFrame, this.bottomPlateColor, this.frameLineColor);
+		}
+
+	};
+
+	/**
+	 * DOMの構築が終わり、DOMContentLoadedイベントが発生したタイミングでキャンバス描画処理を行う
+	 */
+	window.addEventListener("DOMContentLoaded", () => {
+		const [backGroundLayer, puzzleLayer, animeLayer] = makeSlidePuzzle("slidepuzzle");
+		new backGroundDrawFunc(backGroundLayer).init().draw();
+	});
 
 })();
