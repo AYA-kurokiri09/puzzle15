@@ -49,120 +49,120 @@
 	//プロトタイプによるメモリ節約
 	//参考: https://www.sejuku.net/blog/47722
 	
-		layerCtrl.prototype = {
+	layerCtrl.prototype = {
 
-			/**
-         	* キャンバスにスタイルをセット
-         	* @param styleObj 例：{ widt: "100px" , height : "100px" }
-         	*/
-			//TODO: styleObjのwidthを取得できるようにする
-			setStyle(styleObj) {
-				const canvas = this.getCanvas;
-				Object.keys(styleObj).forEach(e => canvas.style[e] = styleObj[e]);
-			},
+		/**
+		* キャンバスにスタイルをセット
+		* @param styleObj 例：{ widt: "100px" , height : "100px" }
+		*/
+		//TODO: styleObjのwidthを取得できるようにする
+		setStyle(styleObj) {
+			const canvas = this.getCanvas;
+			Object.keys(styleObj).forEach(e => canvas.style[e] = styleObj[e]);
+		},
 
-			/**
-			 * キャンバスサイズをセット
-			 * @param w
-			 * @param h
-			 */
-			//オブジェクト内部での短縮メソッド定義: https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Functions/Method_definitions
-			setSize(w,h) {
-				const canvas = this.getCanvas();
-				canvas.setAttribute("width", w);
-				canvas.setAttribute("height", h);
-			},
+		/**
+		 * キャンバスサイズをセット
+		 * @param w
+		 * @param h
+		 */
+		//オブジェクト内部での短縮メソッド定義: https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Functions/Method_definitions
+		setSize(w,h) {
+			const canvas = this.getCanvas();
+			canvas.setAttribute("width", w);
+			canvas.setAttribute("height", h);
+		},
 
-			/**
-			 * 四角形の描画
-			 * @param rect [左座標, 上座標, 幅, 高さ]
-			 * @param fillColor 塗りつぶし色 null ... 塗りつぶしなし
-			 * @param strokeColor 線色 null ...線なし
-			 */
-			rect(rect, fillColor, strokeColor = null) {
-				const context = this.getContext();
-				context.save();
-				if (fillColor !== null) {
-					context.fillStyle = fillColor;
-					context.fillRect(...rect);//[左座標, 上座標, 幅, 高さ]を配列扱いで代入
-				}
-				if(strokeColor !== null) {
-					context.strokeColor = strokeColor;
-					context.strokeRect(...rect);
-				}
-				context.restore();
-				return this;
-			},
-
-			/**
-			 * テキストの描画
-			 * @param style テキスト属性のオブジェクト
-			 * @param textString 描画する文字列
-			 * @param x 描画位置
-			 * @param y 描画位置
-			 */
-			//Object.keys()参考: https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
-			//.foreach(アロー関数)参考: https://www.javadrive.jp/javascript/array/index10.html
-			text(style, textString, x, y) {
-				const context = this.getContext();
-				context.save();
-				//eはelementのe https://www.javadrive.jp/javascript/array/index10.html
-				Object.keys(style).forEach(e => context[e] = style[e]);
-				context.storkeText(textString, x, y);//ふちどり
-				context.fillText(textString, x, y);//塗りつぶし
-				context.restore();
-				return this;
-			},
-
-			/**
-			 * イメージデータの取得
-			 * @param rect
-			 * @returns {ImageData}
-			 */
-			getImageData(rect) {
-				return this.getContext().getImageData(...rect);
-			},
-
-			/**
-			 * イメージの描画
-			 * @param image
-			 * @param x
-			 * @param y
-			 * @returns {layerCtrl}
-			 */
-			putImageData(image, x, y) {
-				this.getContext().putImageData(image, x, y);
-				return this;
-			},
-
-			/**
-			 * キャンバス全面クリア
-			 */
-			clear() {
-				const cvs = this.getContext().clearRect(...rect);
-				this.getContext().clearRect(0, 0, cvs.width, cvs.height);
-			},
-
-			/**
-			 * キャンバスクリア
-			 * @param rect [ 左座標 , 上座標 , 幅 , 高さ ]
-			 * @returns {layerCtrl}
-			 */
-			clearRect(rect) {
-				this.getContext.clearRect(...rect);
-				return this;
-			},
-
-			/**
-			 * キャンバスのサイズと表示サイズの比率
-			 * @returns {number}
-			 */
-			getScale() {
-				const canvas = this.getCanvas();
-				return canvas.clientWidth / canvas.width;
+		/**
+		 * 四角形の描画
+		 * @param rect [左座標, 上座標, 幅, 高さ]
+		 * @param fillColor 塗りつぶし色 null ... 塗りつぶしなし
+		 * @param strokeColor 線色 null ...線なし
+		 */
+		rect(rect, fillColor, strokeColor = null) {
+			const context = this.getContext();
+			context.save();
+			if (fillColor !== null) {
+				context.fillStyle = fillColor;
+				context.fillRect(...rect);//[左座標, 上座標, 幅, 高さ]を配列扱いで代入
 			}
+			if(strokeColor !== null) {
+				context.strokeColor = strokeColor;
+				context.strokeRect(...rect);
+			}
+			context.restore();
+			return this;
+		},
 
+		/**
+		 * テキストの描画
+		 * @param style テキスト属性のオブジェクト
+		 * @param textString 描画する文字列
+		 * @param x 描画位置
+		 * @param y 描画位置
+		 */
+		//Object.keys()参考: https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
+		//.foreach(アロー関数)参考: https://www.javadrive.jp/javascript/array/index10.html
+		text(style, textString, x, y) {
+			const context = this.getContext();
+			context.save();
+			//eはelementのe https://www.javadrive.jp/javascript/array/index10.html
+			Object.keys(style).forEach(e => context[e] = style[e]);
+			context.storkeText(textString, x, y);//ふちどり
+			context.fillText(textString, x, y);//塗りつぶし
+			context.restore();
+			return this;
+		},
+
+		/**
+		 * イメージデータの取得
+		 * @param rect
+		 * @returns {ImageData}
+		 */
+		getImageData(rect) {
+			return this.getContext().getImageData(...rect);
+		},
+
+		/**
+		 * イメージの描画
+		 * @param image
+		 * @param x
+		 * @param y
+		 * @returns {layerCtrl}
+		 */
+		putImageData(image, x, y) {
+			this.getContext().putImageData(image, x, y);
+			return this;
+		},
+
+		/**
+		 * キャンバス全面クリア
+		 */
+		clear() {
+			const cvs = this.getContext().clearRect(...rect);
+			this.getContext().clearRect(0, 0, cvs.width, cvs.height);
+		},
+
+		/**
+		 * キャンバスクリア
+		 * @param rect [ 左座標 , 上座標 , 幅 , 高さ ]
+		 * @returns {layerCtrl}
+		 */
+		clearRect(rect) {
+			this.getContext.clearRect(...rect);
+			return this;
+		},
+
+		/**
+		 * キャンバスのサイズと表示サイズの比率
+		 * @returns {number}
+		 */
+		getScale() {
+			const canvas = this.getCanvas();
+			return canvas.clientWidth / canvas.width;
 		}
+
+	};
 
 	/**
 	 * キャンバスを作成して配置
@@ -197,7 +197,7 @@
 			parentDiv.appendChild(cv);//parentDivの子要素キャンバスを生成
 			return layer;
 		});
-	}
+	};
 
 	 /**
      * 背景描画用オブジェクト
