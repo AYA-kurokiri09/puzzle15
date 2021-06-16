@@ -57,7 +57,7 @@
 		*/
 		//TODO: styleObjのwidthを取得できるようにする
 		setStyle(styleObj) {
-			const canvas = this.getCanvas;
+			const canvas = this.getCanvas();
 			Object.keys(styleObj).forEach(e => canvas.style[e] = styleObj[e]);
 		},
 
@@ -149,7 +149,7 @@
 		 * @returns {layerCtrl}
 		 */
 		clearRect(rect) {
-			this.getContext.clearRect(...rect);
+			this.getContext().clearRect(...rect);
 			return this;
 		},
 
@@ -204,7 +204,7 @@
      * @param layer
 	 */
 	const backGroundDrawFunc = function (layer) {
-		this.getLayer() = () => layer;
+		this.getLayer = () => layer;
 
 		this.frame = null;// 外周 [ 始点x , 始点y , 幅 , 高さ ]
 		this.innerFrame = null;// 内周( パズルエリア )
