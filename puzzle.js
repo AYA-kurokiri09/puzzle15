@@ -237,7 +237,38 @@
 	};
 
 	/**
+	 * ピースの描画用オブジェクト
+	 * @param layer
+	 * @param animeLayer
+	 */
+	const pieceDrawFunc = function(layer, animeLayer) {
+		this.getLayer = () => layer;
+		this.getAnimeLayer = () => animeLayer;
+
+		this.puzzleSize;//枠を除いたパズルのサイズ
+		this.pieceSize;//1ピースのサイズ
+		this.pieceData;//ピースデータの配列
+		this.allPieceNum;//ピースの総数
+		this.pieceNum;//盤上を分割した座標データ
+		this.pieceImage;//ピースのimageデータ
+
+		this.pieceFillColor = "white";
+		this.pieceStrokeColor = "dimgray";
+
+		this.textStyle = {
+			fillStyle: "black",
+			strokeStyle: "white",
+			textAlign: "center",
+			textBaseLine: "middle",
+			lineWidth: 4,
+			font: "20px 'arial'",
+		};
+	};
+
+
+	/**
 	 * DOMの構築が終わり、DOMContentLoadedイベントが発生したタイミングでキャンバス描画処理を行う
+	 * TODO: ピース描画処理も実行させる
 	 */
 	window.addEventListener("DOMContentLoaded", () => {
 		const [backGroundLayer, puzzleLayer, animeLayer] = makeSlidePuzzle("slidepuzzle");
