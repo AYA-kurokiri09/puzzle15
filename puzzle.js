@@ -55,7 +55,7 @@
 		* キャンバスにスタイルをセット
 		* @param styleObj 例：{ widt: "100px" , height : "100px" }
 		*/
-		//TODO: styleObjのwidthを取得できるようにする
+		//JSのオブジェクトをforEachで処理する方法 https://qiita.com/nantekkotai/items/6c603b40ac2264e9f6f6
 		setStyle(styleObj) {
 			const canvas = this.getCanvas();
 			Object.keys(styleObj).forEach(e => canvas.style[e] = styleObj[e]);
@@ -264,6 +264,10 @@
 			font: "20px 'arial'",
 		};
 	};
+
+	/**
+     * TODO: ピースの描画に必要な座標を計算
+     */
 
 
 	/**
