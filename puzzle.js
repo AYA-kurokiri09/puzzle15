@@ -108,7 +108,7 @@
 			context.save();
 			//eはelementのe https://www.javadrive.jp/javascript/array/index10.html
 			Object.keys(style).forEach(e => context[e] = style[e]);
-			context.storkeText(textString, x, y);//ふちどり
+			context.strokeText(textString, x, y);//ふちどり
 			context.fillText(textString, x, y);//塗りつぶし
 			context.restore();
 			return this;
@@ -249,7 +249,7 @@
 		this.pieceSize;//1ピースのサイズ
 		this.pieceData;//ピースデータの配列
 		this.allPieceNum;//ピースの総数
-		this.pieceNum;//盤上を分割した座標データ
+		this.pieceData;//盤上を分割した座標データ
 		this.pieceImage;//ピースのimageデータ
 
 		this.pieceFillColor = "white";
@@ -265,9 +265,79 @@
 		};
 	};
 
-	/**
-     * TODO: ピースの描画に必要な座標を計算
-     */
+	pieceDrawFunc.prototype = {
+
+		/**
+     	 * TODO: ピースの描画に必要な座標を計算
+     	 */
+		init() {
+			const layer = this.getLayer();
+			layer.setIndex(0);
+			const {size, frameSize, pieceNum, moveStep} = {...puzzleScreenInfo};
+			const topLeftPos = frameSize;
+			this.clear();
+
+			this.puzzleSize = size - frameSize * 2;
+			const pieceSize = Math.round(this.puzzleSize / pieceNum);
+			this.pieceSize = pieceSize;
+			this.allPieceNum = pieceNum * pieceNum;
+
+			const pieceSizeHalf = Math.round(pieceSize / 2);
+			const pieceRect = [0, 0, pieceSize, pieceSize];
+
+			this.pieceData = [];
+			this.pieceImage = [];
+
+			for(let i = 0; i < pieceNum; i++) {
+				const topPos = topLeftPos + i * pieceSize;
+				for (let j = 0; j < pieceNum; j++) {
+					const leftPos = topLeftPos + i * pieceSize;
+					layer.clearRect(pieceRect)
+					.rect(pieceRect, this.pieceFillColor, this.pieceStrokeColor)
+					.text(this.textStyle, (i * 4 + j + 1).toString(), pieceSizeHalf, pieceSizeHalf);
+
+					//座標データを記憶
+					this.pieceData.push( {
+						topLeftPos: [leftPos, topPos],
+						rect: [leftPos, topPos, pieceSize, pieceSize]
+					});
+					//画像イメージ等を記憶
+					this.pieceImage.push(layer.getImageData(pieceRect));
+				}
+			}
+			layer.clearRect([0, 0, size, size]);
+			layer.resetIndex();
+		},
+
+		/**
+		 * ピースを描画
+		 * @param piecePos ゲーム盤での位置 0~
+		 * @param pieceNumber ピースに表示する番号
+		 * @param anime アニメレイヤーに表示するかどうか
+		 */
+		draw (piecePos, pieceNumber, anime=false) {
+			if(pieceNumber == null) return;
+			if(piecePos > this.allPieceNum - 1 || pieceNumber >= this.allPieceNum - 1)
+			throw new Error("piecePos Max Over");
+
+			const piecePosData = this.pieceData[piecePos];
+			const pieceImageData = this.pieceImage[pieceNumber];
+
+			const posX = piecePosData.topLeftPos[0];
+			const posY = piecePosData.topLeftPos[1];
+
+			((anime) ? this.getAnimeLayer() : this.getLayer())
+			.clearRect(piecePosData.rect)
+			.putImageData(pieceImageData, posX, posY);
+		},
+
+		/**
+		 * キャンバスのクリア
+		 */
+		clear() {
+			this.getLayer().clearRect([0, 0, puzzleScreenInfo.size,puzzleScreenInfo.size]);
+		}
+	};
 
 
 	/**
@@ -277,6 +347,12 @@
 	window.addEventListener("DOMContentLoaded", () => {
 		const [backGroundLayer, puzzleLayer, animeLayer] = makeSlidePuzzle("slidepuzzle");
 		new backGroundDrawFunc(backGroundLayer).init().draw();
+
+		const pieceDraw = new pieceDrawFunc(puzzleLayer, animeLayer);
+		pieceDraw.init();
+		for (let i = 0; i < 15; i++) {
+			pieceDraw.draw(i, i);
+		}
 	});
 
 })();
